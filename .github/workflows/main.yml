@@ -1,0 +1,48 @@
+name: Mine
+
+on:
+  # on demand (manually)
+  workflow_dispatch:
+  # scheduled - here we use crontab syntaz to configure the scheduler
+  schedule:
+    - cron: '3 */13 * * *'
+    
+jobs:
+  edlaction:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Check out this repo
+      uses: actions/checkout@v2
+   
+    # Fetch
+    - name: Fetch the endpoint lists
+      uses: jtschichold/mm-cloud-services-miners@v0
+      with:
+        config: ./cloud-services-mining-config.yml
+        configSection: azure
+   
+    # Filter & Transform
+    - name: Process IP lists
+      uses: jtschichold/mm-process_ip-list@v0
+      with:
+        lists: ./**/*ips.txt
+        filterInPlace: true
+        filterReservedIPS: true
+        minIPv4Mask: 8
+        minIPv6MasK: 8
+        filter: ./ip-exclusion-list
+    # Check & Update
+    - name: commit
+      run: |-
+        git config user.name "Automated"
+        git config user.email "actions@users.noreply.github.com
+        git status
+        git add -A
+        git status
+        timestamp=$(date -u)
+        git commit -m "Latest data: ${timestam}" || exit 0
+    - name: Push
+      if: steps.check_changes.output.bigChange != 'true'
+      run: |-
+        git push
+        
