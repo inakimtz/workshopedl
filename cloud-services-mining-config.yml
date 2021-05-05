@@ -1,0 +1,15 @@
+Azure:
+  - name: mine Azure Public Cloud
+    miner: AzureWithServiceTagsMiner
+    args:
+      cloud: PublicCloud
+    outputs:
+      - resultPath: ./public-cloud-ips.txt
+      - resultPath: ./public-cloud-azuread-ips.txt
+        filter: "[?systemService==?AzureAD'].endpoint"
+   - name: mine Azure Germany Cloud
+     miner: AzureWithServiceTagsMiner
+     args:
+       cloud: GermanyCloud
+     outputs:
+        - resultPath: ./germany-cloud-ips.txt
