@@ -6,9 +6,9 @@ on:
   # on demand (manually)
   workflow_dispatch:
   # scheduled - here we use the crontab syntax to configure the scheduler
-  schedule:
+  #schedule:
     # every 13 hours
-    - cron:  '3 */13 * * *'
+    #- cron:  '3 */13 * * *'
 
 jobs:
   # we can define multiple lists of steps (called jobs) inside the same workflow
